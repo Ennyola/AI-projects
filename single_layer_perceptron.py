@@ -104,11 +104,31 @@ class Perceptron:
                     self.weights[k] = self.weights[k] + self.lr*error*self.inputs[j][k]
                     processing_frame_text.insert(END,f"\tWeight[{k}]: {previous_weight} --->  {self.weights[k]} \n")
             processing_frame_text.insert(END,"next iteration \n")
-
+        return self.weights
 
 
 
 #Functions
+
+def linearly_separable(perceptron, final_weights, desired_outputs,type):
+    output_from_final_weight = 0
+    linearly_separable = True
+    result_frame_text.insert(END, f"Final Prediction Started\n")
+    result_frame_text.insert(END, f"Final weight after Training: {final_weights}\n")
+    for i in range(len(inputs)): 
+        output_from_final_weight =  perceptron.get_weighted_sum(final_weights,inputs[i])
+        result_frame_text.insert(END, f"\tPre-activation of Inputs {inputs[i][1:]} after computing with final weight ---> {final_weights.dot(inputs[i])}\n")
+        if output_from_final_weight == desired_outputs[i]:
+            result_frame_text.insert(END, f"\tWe obtain {output_from_final_weight} when we use our activation function. which is exactly {inputs[i][1:2]} {type} {inputs[i][2:]}\n")
+        if output_from_final_weight != desired_outputs[i]:
+            result_frame_text.insert(END, f"\tWe obtain {output_from_final_weight} when we use our activation function. which is not exactly {inputs[i][1:2]} {type} {inputs[i][2:]}\n")
+            linearly_separable = False
+    if linearly_separable:
+        result_frame_text.insert(END,"This is a Linearly Separable Problem \n")
+    else:
+        result_frame_text.insert(END,"This is not a Linearly Separable Problem \n")
+
+
 def button_clear():
     processing_frame_text.delete('1.0',END)
     result_frame_text.delete('1.0',END)
@@ -122,7 +142,10 @@ def button_and():
     weights= np.array([0, 0, 0])
     processing_frame_text.insert(END, "[INFO] training perceptron..." + "\n")
     p = Perceptron(epoch,lr,inputs,weights,desired_outputs)
-    p.train_weights()
+    final_weights = p.train_weights()
+    linearly_separable(p, final_weights, desired_outputs,"AND")
+
+    
 
         
 def button_or():
@@ -133,7 +156,8 @@ def button_or():
     weights= np.array([0, 0, 0])
     processing_frame_text.insert(END, "[INFO] training perceptron..." + "\n")
     p = Perceptron(epoch,lr,inputs,weights,desired_outputs)
-    p.train_weights()
+    final_weights = p.train_weights()
+    linearly_separable(p, final_weights, desired_outputs,"OR")
 
 
 def button_xor():
@@ -144,7 +168,8 @@ def button_xor():
     weights= np.array([0, 0, 0])
     processing_frame_text.insert(END, "[INFO] training perceptron..." + "\n")
     p = Perceptron(epoch,lr,inputs,weights,desired_outputs)
-    p.train_weights()
+    final_weights = p.train_weights()
+    linearly_separable(p, final_weights, desired_outputs,"XOR")
 
 
         
